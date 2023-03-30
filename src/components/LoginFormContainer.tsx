@@ -1,12 +1,21 @@
-import { ChangeEvent, useContext, useState } from "react";
+import { Dispatch, SetStateAction, useContext } from "react";
 import { useForm } from "react-hook-form";
-import styled from "styled-components";
-import StyledInput from "./Input";
 import OutlineButton from "./OutlineButton";
 import * as yup from "yup";
-import { ILoginRequest } from "@/interfaces/login.interface";
+import { ILoginRequestProps } from "@/interfaces/login.interface";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { AuthContext } from "@/context/authContext";
+import { UserContext } from "@/context/userContext";
+import { styled } from "styled-components";
+import StyledInput from "./Input";
+import { useRouter } from "next/router";
+import { destroyCookie } from "nookies";
+
+interface LoginFormProps {
+  tokenExists: boolean;
+  setTokenExists: Dispatch<SetStateAction<boolean>>;
+  clientRendered: boolean;
+  setOpen: Dispatch<SetStateAction<boolean>>;
+}
 
 const LoginFormContainer = styled.form`
   padding: 4rem 6rem;
@@ -17,15 +26,12 @@ const LoginFormContainer = styled.form`
   justify-content: center;
   gap: 4.4rem;
   border-radius: 2rem;
-
-  h1 {
-    font-size: 3.6rem;
+  h2 {
+    font-size: 2.6rem;
     font-weight: bold;
   }
-
   p {
-    font-size: 2rem;
-
+    font-size: 1.4rem;
     span {
       color: #0093c1;
       cursor: pointer;
@@ -33,55 +39,97 @@ const LoginFormContainer = styled.form`
   }
 `;
 
-const LoginForm = () => {
-  const [inputEmail, setInputEmail] = useState("");
-  const [inputPassword, setInputPassword] = useState("");
+const schema = yup.object().shape({
+  email: yup.string().email().required(),
+  password: yup.string().required(),
+});
 
-  const changeEmailState = (e: ChangeEvent<HTMLInputElement>) =>
-    setInputEmail(e.target.value);
-  const changePasswordState = (e: ChangeEvent<HTMLInputElement>) =>
-    setInputPassword(e.target.value);
-
-  const schema = yup.object().shape({
-    email: yup.string().email().required(),
-    password: yup.string().required(),
-  });
-
+const LoginForm = ({
+  tokenExists,
+  setTokenExists,
+  clientRendered,
+  setOpen,
+}: LoginFormProps) => {
   const {
     register,
     handleSubmit,
-    watch,
-    formState: { errors },
-  } = useForm<ILoginRequest>({ resolver: yupResolver(schema) });
+    formState: { errors, dirtyFields },
+  } = useForm<ILoginRequestProps>({
+    resolver: yupResolver(schema),
+    defaultValues: { email: "", password: "" },
+  });
 
-  const { login } = useContext(AuthContext);
+  const { login } = useContext(UserContext);
 
-  login({ email: "igor@mail", password: "12345" });
+  const router = useRouter();
 
-  const onSubmit = async (data: any) => {
-    await login(data);
+  const useRedirectToDashboard = () => {
+    router.push("/dashboard");
+  };
+
+  const destroyToken = () => {
+    destroyCookie(null, "token");
+    setTokenExists(false);
+  };
+
+  const openModal = () => {
+    setOpen(true);
+  };
+
+  const allowDashboardAccess = () => {
+    if (!tokenExists) {
+      return (
+        <>
+          <h2>Login</h2>
+          <StyledInput
+            {...register("email")}
+            placeholder={"Email"}
+            error={errors.email}
+            filled={dirtyFields.email ? "filled" : undefined}
+          />
+          <StyledInput
+            {...register("password")}
+            placeholder={"Senha"}
+            type={"password"}
+            error={errors.password}
+            filled={dirtyFields.password ? "filled" : undefined}
+          />
+
+          <p>
+            Não possui conta ?{" "}
+            <span role={"button"} onClick={openModal}>
+              {" "}
+              Registre-se
+            </span>
+          </p>
+
+          <OutlineButton width={"34rem"} mode={"sucess"}>
+            Entrar
+          </OutlineButton>
+        </>
+      );
+    }
+
+    return (
+      <>
+        <h1>Bem vindo Novamente!</h1>
+        <OutlineButton
+          width={"34rem"}
+          mode={"sucess"}
+          onClick={useRedirectToDashboard}
+        >
+          Acessar a Dashboard
+        </OutlineButton>
+        <OutlineButton width={"34rem"} onClick={destroyToken} mode={"negative"}>
+          Entrar com outra conta
+        </OutlineButton>
+      </>
+    );
   };
 
   return (
-    <LoginFormContainer onSubmit={handleSubmit(onSubmit)}>
-      <h1>Login</h1>
-      <StyledInput
-        placeholder="Email"
-        type={"email"}
-        {...register("email")}
-        onChange={changeEmailState}
-        value={inputEmail}
-      />
-      <StyledInput
-        placeholder="Senha"
-        {...register("password")}
-        onChange={changePasswordState}
-        value={inputPassword}
-      />
-      <p>
-        Não possui conta ? <span role={"button"}>Registrar-se</span>
-      </p>
-      <OutlineButton>Entrar</OutlineButton>
+    <LoginFormContainer onSubmit={handleSubmit(login)}>
+      {clientRendered && allowDashboardAccess()}
     </LoginFormContainer>
   );
 };
