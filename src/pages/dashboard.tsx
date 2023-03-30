@@ -1,10 +1,10 @@
-import Card from "@/components/Cards";
 import AddContactCard from "@/components/Cards/AddContactCard";
 import ContactsCard from "@/components/Cards/ContactsCard";
 import ProfileCard from "@/components/Cards/ProfileCard";
 import DashboardContainer from "@/components/DashboardContainer";
 import { RegisterContext } from "@/context/registerContext";
 import { UserContext } from "@/context/userContext";
+import { UtilitiesContext } from "@/context/utilitiesContext";
 import { IUserProfile } from "@/interfaces/user.interface";
 import api from "@/services/api";
 import { NextPage, GetServerSideProps } from "next";
@@ -18,11 +18,24 @@ interface DashboardProps {
 const Dashboard: NextPage<DashboardProps> = ({ serverSideProfile }) => {
   const { setContacts } = useContext(RegisterContext);
   const { setProfile } = useContext(UserContext);
+  const { phoneMask, handleDate } = useContext(UtilitiesContext);
+
 
   useEffect(() => {
-    setProfile(serverSideProfile);
+    setProfile({
+      ...serverSideProfile,
+      phone: phoneMask(serverSideProfile.phone),
+      created_at: handleDate(serverSideProfile.created_at),
+    });
     setContacts(serverSideProfile.contacts);
-  }, [serverSideProfile, serverSideProfile.contacts, setContacts, setProfile]);
+  }, [
+    serverSideProfile,
+    serverSideProfile.contacts,
+    setContacts,
+    setProfile,
+    phoneMask,
+    handleDate,
+  ]);
 
   return (
     <DashboardContainer>
