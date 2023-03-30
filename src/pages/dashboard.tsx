@@ -1,9 +1,65 @@
-const Dashboard = () => {
+import Card from "@/components/Cards";
+import AddContactCard from "@/components/Cards/AddContactCard";
+import ContactsCard from "@/components/Cards/ContactsCard";
+import ProfileCard from "@/components/Cards/ProfileCard";
+import DashboardContainer from "@/components/DashboardContainer";
+import { RegisterContext } from "@/context/registerContext";
+import { UserContext } from "@/context/userContext";
+import { IUserProfile } from "@/interfaces/user.interface";
+import api from "@/services/api";
+import { NextPage, GetServerSideProps } from "next";
+import nookies from "nookies";
+import { useContext, useEffect } from "react";
+
+interface DashboardProps {
+  serverSideProfile: IUserProfile;
+}
+
+const Dashboard: NextPage<DashboardProps> = ({ serverSideProfile }) => {
+  const { setContacts } = useContext(RegisterContext);
+  const { setProfile } = useContext(UserContext);
+
+  useEffect(() => {
+    setProfile(serverSideProfile);
+    setContacts(serverSideProfile.contacts);
+  }, [serverSideProfile, serverSideProfile.contacts, setContacts, setProfile]);
+
   return (
-    <div>
-      <h1>Olá</h1>
-    </div>
+    <DashboardContainer>
+      <ProfileCard />
+      <ContactsCard />
+      <AddContactCard />
+    </DashboardContainer>
   );
+};
+
+export const getServerSideProps: GetServerSideProps<DashboardProps> = async (
+  ctx
+) => {
+  const cookies = nookies.get(ctx);
+
+  if (!cookies["token"]) {
+    return {
+      redirect: {
+        destination: "/",
+        permanent: false,
+      },
+    };
+  }
+
+  const serverSideProfile = await api
+    .get("/profile", {
+      headers: {
+        Authorization: `Bearer ${cookies["token"]}`,
+      },
+    })
+    .then((res) => res.data);
+
+  return {
+    props: {
+      serverSideProfile,
+    },
+  };
 };
 
 export default Dashboard;
