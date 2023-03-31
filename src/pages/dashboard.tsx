@@ -60,19 +60,16 @@ export const getServerSideProps: GetServerSideProps<DashboardProps> = async (
   }
 
   const serverSideProfile = await api
-    .get("/profile", {
+    .get("http://localhost:3003/profile", {
       headers: {
         Authorization: `Bearer ${cookies["token"]}`,
       },
     })
-    .then((res) => res.data)
-    .catch((err) => {
-      console.log({ error: err, token: [cookies["token"]] });
-    });
+    .then((res) => res.data);
 
   return {
     props: {
-      serverSideProfile,
+      serverSideProfile: serverSideProfile,
     },
   };
 };
