@@ -6,7 +6,7 @@ import { ContactsContext } from "@/context/contactsContext";
 import { UserContext } from "@/context/userContext";
 import { UtilitiesContext } from "@/context/utilitiesContext";
 import { IUserProfile } from "@/interfaces/user.interface";
-import api from "@/services/api";
+import axios from "axios";
 import { NextPage, GetServerSideProps } from "next";
 import nookies from "nookies";
 import { useContext, useEffect } from "react";
@@ -48,6 +48,7 @@ const Dashboard: NextPage<DashboardProps> = ({ serverSideProfile }) => {
 export const getServerSideProps: GetServerSideProps<DashboardProps> = async (
   ctx
 ) => {
+  const hostname = ctx.req.headers.host;
   const cookies = nookies.get(ctx);
 
   if (!cookies["token"]) {
@@ -59,11 +60,9 @@ export const getServerSideProps: GetServerSideProps<DashboardProps> = async (
     };
   }
 
-  const serverSideProfile = await api
-    .get("http://localhost:3003/profile", {
-      headers: {
-        Authorization: `Bearer ${cookies["token"]}`,
-      },
+  const serverSideProfile = await axios
+    .get("http://" + hostname + "/profile", {
+      headers: { Authorization: `Bearer ${cookies["token"]}` },
     })
     .then((res) => res.data);
 
