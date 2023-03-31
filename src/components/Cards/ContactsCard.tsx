@@ -3,7 +3,7 @@ import styled from "styled-components";
 import { useContext, useState } from "react";
 import { IContactResponseProps } from "../../interfaces/contact.interface";
 import SingleContactCard from "./SingleContactCard";
-import { RegisterContext } from "@/context/registerContext";
+import { ContactsContext } from "@/context/contactsContext";
 
 const ContactsCardContainer = styled(Card)`
   background-color: rgba(0, 0, 0, 0.1);
@@ -11,6 +11,30 @@ const ContactsCardContainer = styled(Card)`
   height: 78vh;
   overflow-y: hidden;
   position: relative;
+
+  div {
+    height: 80%;
+    display: flex;
+    flex-flow: column nowrap;
+    align-items: center;
+    justify-content: center;
+    gap: 2rem;
+
+    > span {
+      &:nth-child(1) {
+        font-size: 2rem;
+        font-weight: bold;
+      }
+
+      &:nth-child(2) {
+        font-size: 1.6rem;
+      }
+
+      &:nth-child(3) {
+        font-size: 3rem;
+      }
+    }
+  }
 
   ul {
     height: 90%;
@@ -38,16 +62,32 @@ const ContactsCardContainer = styled(Card)`
 `;
 
 const ContactsCard = () => {
-  const { contacts } = useContext(RegisterContext);
+  const { contacts } = useContext(ContactsContext);
 
-  return (
-    <ContactsCardContainer>
-      <h2>Meus Contatos</h2>
+  const handleContactsRender = () => {
+    if (contacts.length === 0) {
+      return (
+        <div>
+          <span>Lista Vazia!</span>
+          <span>Adcione um contato no formulário ao lado</span>
+          <span>{"-->"}</span>
+        </div>
+      );
+    }
+
+    return (
       <ul>
         {contacts.map((el) => {
           return <SingleContactCard key={el.id} contact={el} />;
         })}
       </ul>
+    );
+  };
+
+  return (
+    <ContactsCardContainer>
+      <h2>Meus Contatos</h2>
+      {handleContactsRender()}
     </ContactsCardContainer>
   );
 };
