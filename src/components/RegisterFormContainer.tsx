@@ -1,14 +1,15 @@
 import BoxLabelInput from "./BoxLabelInput";
 import OutlineButton from "./OutlineButton";
-import { useForm, UseFormClearErrors } from "react-hook-form";
+import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 import { IRegisterRequestProps } from "@/interfaces/register.interface";
 import { Dispatch, SetStateAction, useContext, useEffect } from "react";
-import { RegisterContext } from "@/context/registerContext";
 import { useMutation } from "@tanstack/react-query";
 import { Rings } from "react-loader-spinner";
 import Image from "next/image";
+import { toast } from "react-toastify";
+import { UserContext } from "@/context/userContext";
 
 interface IRegisterFormContainerProps {
   setOpen: Dispatch<SetStateAction<boolean>>;
@@ -41,18 +42,18 @@ const RegisterFormContainer = ({ setOpen }: IRegisterFormContainerProps) => {
       phone: "",
     },
   });
-  const { registerUser } = useContext(RegisterContext);
+  const { registerUser } = useContext(UserContext);
 
   const { mutateAsync, isLoading, isError, isSuccess } = useMutation({
     mutationFn: registerUser,
-    onError: (err) => console.log(err),
+    onError: () => toast.error("Ops, algo deu errado"),
   });
 
   const onSubmit = async (data: IRegisterRequestProps) => {
     await mutateAsync({
       ...data,
       phone: data.phone.replace(/[^$0-9\.]/g, ""),
-    });
+    }).catch(() => {});
   };
 
   const changeModalState = () => {
@@ -146,7 +147,7 @@ const RegisterFormContainer = ({ setOpen }: IRegisterFormContainerProps) => {
           isRequired
           compiledRegister={{ register: register, name: "phone" }}
           label={"Telefone"}
-          type={"text"}
+          type={"tel"}
           placeholder={"(XX) XXXXX-XXXX"}
           error={errors.phone}
           filled={dirtyFields.phone ? "filled" : undefined}
