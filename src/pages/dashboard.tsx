@@ -59,7 +59,7 @@ export const getServerSideProps: GetServerSideProps<DashboardProps> = async (
     };
   }
 
-  const response = await fetch("http://" + hostname + "/profile", {
+  const response = await fetch("http://localhost:3000/profile", {
     headers: {
       Authorization: `Bearer ${cookies["token"]}`,
     },
