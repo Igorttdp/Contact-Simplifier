@@ -9,6 +9,8 @@ import { styled } from "styled-components";
 import StyledInput from "./Input";
 import { useRouter } from "next/router";
 import { destroyCookie } from "nookies";
+import { useMutation } from "@tanstack/react-query";
+import { toast } from "react-toastify";
 
 interface LoginFormProps {
   tokenExists: boolean;
@@ -76,6 +78,16 @@ const LoginForm = ({
     setOpen(true);
   };
 
+  const { mutateAsync } = useMutation({
+    mutationFn: login,
+    onError: () => toast.error("Ops, algo deu errado"),
+  });
+
+  const onSubmit = async (payload: ILoginRequestProps) => {
+    toast.dismiss();
+    await mutateAsync(payload).catch(() => {});
+  };
+
   const allowDashboardAccess = () => {
     if (!tokenExists) {
       return (
@@ -128,7 +140,7 @@ const LoginForm = ({
   };
 
   return (
-    <LoginFormContainer onSubmit={handleSubmit(login)}>
+    <LoginFormContainer onSubmit={handleSubmit(onSubmit)}>
       {clientRendered && allowDashboardAccess()}
     </LoginFormContainer>
   );
