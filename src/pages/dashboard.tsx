@@ -65,7 +65,10 @@ export const getServerSideProps: GetServerSideProps<DashboardProps> = async (
         Authorization: `Bearer ${cookies["token"]}`,
       },
     })
-    .then((res) => res.data);
+    .then((res) => res.data)
+    .catch((err) => {
+      console.log({ error: err, token: [cookies["token"]] });
+    });
 
   return {
     props: {
