@@ -6,7 +6,6 @@ import { ContactsContext } from "@/context/contactsContext";
 import { UserContext } from "@/context/userContext";
 import { UtilitiesContext } from "@/context/utilitiesContext";
 import { IUserProfile } from "@/interfaces/user.interface";
-import axios from "axios";
 import { NextPage, GetServerSideProps } from "next";
 import nookies from "nookies";
 import { useContext, useEffect } from "react";
@@ -60,15 +59,16 @@ export const getServerSideProps: GetServerSideProps<DashboardProps> = async (
     };
   }
 
-  const serverSideProfile = await axios
-    .get("http://" + hostname + "/profile", {
-      headers: { Authorization: `Bearer ${cookies["token"]}` },
-    })
-    .then((res) => res.data);
+  const response = await fetch("http://" + hostname + "/profile", {
+    headers: {
+      Authorization: `Bearer ${cookies["token"]}`,
+    },
+  });
+  const serverSideProfile = await response.json();
 
   return {
     props: {
-      serverSideProfile: serverSideProfile,
+      serverSideProfile,
     },
   };
 };
