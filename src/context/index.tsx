@@ -1,4 +1,4 @@
-import { RegisterProvider } from "./registerContext";
+import { ContactsProvider } from "./contactsContext";
 import { UserProvider } from "./userContext";
 import UtilitiesProvider from "./utilitiesContext";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
@@ -11,7 +11,7 @@ const Providers = ({ children }: IProviderProps) => {
     <QueryClientProvider client={queryClient}>
       <UserProvider>
         <UtilitiesProvider>
-          <RegisterProvider>{children}</RegisterProvider>
+          <ContactsProvider>{children}</ContactsProvider>
         </UtilitiesProvider>
       </UserProvider>
     </QueryClientProvider>
