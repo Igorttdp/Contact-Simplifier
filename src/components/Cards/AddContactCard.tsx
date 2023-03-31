@@ -25,7 +25,10 @@ const AddContactCardContainer = styled(Card)`
 
 const schema = yup.object().shape({
   name: yup.string().min(2).max(50).required(),
-  phone: yup.string().min(10).max(11).required(),
+  phone: yup
+    .string()
+    .matches(/^(\(\d{2}\)\s\d{4,5}-\d{4})$/, "Telefone inválido")
+    .required(),
   email: yup.string().email().required(),
   secundary_email: yup.string().email().notRequired(),
 });
@@ -56,7 +59,10 @@ const AddContactCard = () => {
   });
 
   const onSubmit = async (payload: IContactRequestProps) => {
-    await mutateAsync(payload);
+    await mutateAsync({
+      ...payload,
+      phone: payload.phone.replace(/[^$0-9\.]/g, ""),
+    });
   };
 
   return (
@@ -77,7 +83,7 @@ const AddContactCard = () => {
           compiledRegister={{ register, name: "phone" }}
           label={"Telefone"}
           placeholder={"(XX) XXXXXXXXX"}
-          type={"text"}
+          type={"tel"}
           error={errors.phone}
           filled={dirtyFields.phone ? "fiiled" : undefined}
           width={"unset"}
