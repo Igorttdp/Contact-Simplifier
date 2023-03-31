@@ -2,7 +2,7 @@ import { FieldError, FieldErrors, UseFormRegister } from "react-hook-form";
 import { styled } from "styled-components";
 
 interface StyledInputProps {
-  error?: FieldError;
+  error?: FieldError | string;
   filled?: string;
   width?: string;
 }
@@ -33,8 +33,28 @@ const StyledInput = styled.input<StyledInputProps>`
       error ? " #ff5100" : filled ? "#00d495" : "#0093c1"};
   }
 
-  &:-webkit-autofill {
-    background-color: transparent !important;
+  &:disabled {
+    cursor: not-allowed;
+    background-color: #4624246c;
+    border-color: #922424;
+
+    &::placeholder {
+      color: #8d8d8d;
+    }
+  }
+
+  &:-webkit-autofill,
+  &:-webkit-autofill:focus {
+    -webkit-text-fill-color: #ffffff;
+    -webkit-box-shadow: 0 0 0px 1000px #222426 inset;
+    box-shadow: 0 0 0px 1000px #222426 inset;
+    font-family: "Inter";
+    font-size: 1.4rem;
+    transition: background-color 5000s ease-in-out 0s;
+  }
+
+  &:-moz-autofill {
+    -moz-text-fill-color: #ffffff;
   }
 `;
 
