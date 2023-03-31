@@ -2,7 +2,7 @@ import AddContactCard from "@/components/Cards/AddContactCard";
 import ContactsCard from "@/components/Cards/ContactsCard";
 import ProfileCard from "@/components/Cards/ProfileCard";
 import DashboardContainer from "@/components/DashboardContainer";
-import { RegisterContext } from "@/context/registerContext";
+import { ContactsContext } from "@/context/contactsContext";
 import { UserContext } from "@/context/userContext";
 import { UtilitiesContext } from "@/context/utilitiesContext";
 import { IUserProfile } from "@/interfaces/user.interface";
@@ -16,10 +16,9 @@ interface DashboardProps {
 }
 
 const Dashboard: NextPage<DashboardProps> = ({ serverSideProfile }) => {
-  const { setContacts } = useContext(RegisterContext);
+  const { setContacts } = useContext(ContactsContext);
   const { setProfile } = useContext(UserContext);
   const { phoneMask, handleDate } = useContext(UtilitiesContext);
-
 
   useEffect(() => {
     setProfile({
