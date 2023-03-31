@@ -3,6 +3,8 @@ import styled from "styled-components";
 import { FieldError, UseFormRegister } from "react-hook-form";
 import { IRegisterRequestProps } from "@/interfaces/register.interface";
 import { IContactRequestProps } from "@/interfaces/contact.interface";
+import { ChangeEvent, useContext, useState } from "react";
+import { UtilitiesContext } from "@/context/utilitiesContext";
 
 const BoxLabelInputContainer = styled.div`
   display: flex;
@@ -49,7 +51,46 @@ const BoxLabelInput = ({
     return isRequired ? <span>*</span> : null;
   };
 
+  const { phoneMask } = useContext(UtilitiesContext);
   const { register, name } = compiledRegister;
+
+  const [phoneValue, setPhoneValue] = useState("");
+
+  if (type === "tel") {
+    const {
+      onChange: onChangePhone,
+      onBlur: onPhoneBlur,
+      name: phoneName,
+      ref: phoneRef,
+    } = register("phone");
+
+    const onPhoneChange = (e: ChangeEvent<HTMLInputElement>) => {
+      const maskedValue = phoneMask(e.target.value);
+      setPhoneValue(maskedValue);
+      onChangePhone(e);
+    };
+
+    return (
+      <BoxLabelInputContainer>
+        <span>
+          {label} {requiredAdvertment()}
+        </span>
+        <StyledInput
+          onChange={onPhoneChange}
+          onBlur={onPhoneBlur}
+          name={phoneName}
+          ref={phoneRef}
+          value={phoneValue}
+          placeholder={placeholder}
+          type={type}
+          error={error}
+          filled={filled}
+          width={width}
+          maxLength={15}
+        />
+      </BoxLabelInputContainer>
+    );
+  }
 
   return (
     <BoxLabelInputContainer>
