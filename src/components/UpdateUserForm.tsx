@@ -20,6 +20,7 @@ import CustomAccordion from "./Accordion";
 import StyledInput from "./Input";
 import OutlineButton from "./OutlineButton";
 import { UtilitiesContext } from "@/context/utilitiesContext";
+import { toast } from "react-toastify";
 
 let atLeastOneError: boolean | undefined = undefined;
 
@@ -93,11 +94,11 @@ const UpdateUserForm = ({ setOpen }: UpdateUserFormProps) => {
         phone: phoneMask(data.phone),
         created_at: handleDate(data.created_at),
       }),
-    onError: (err) => console.error(err),
+    onError: () => toast.error("Ops, algo deu errado"),
   });
 
   const onSubmit = async (payload: IUpdateUserRequestProps) => {
-    await mutateAsync(payload);
+    await mutateAsync(payload).catch(() => {});
   };
 
   const changeModalState = () => {
