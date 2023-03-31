@@ -4,8 +4,8 @@ import OutlineButton from "../OutlineButton";
 import { useContext, useState } from "react";
 import { UserContext } from "@/context/userContext";
 import Image from "next/image";
-import moment from "moment";
 import Modal from "../Modal";
+import UpdateUserForm from "../UpdateUserForm";
 
 const ProfileCardContainer = styled(Card)`
   > div:nth-child(1) {
@@ -36,6 +36,12 @@ const ProfileCardContainer = styled(Card)`
         position: absolute;
         bottom: 0;
         right: 0;
+        transition: all 0.3s;
+
+        &:hover {
+          transition: all 0.1s;
+          transform: scale(0.95);
+        }
       }
     }
   }
@@ -65,8 +71,9 @@ const ProfileCardContainer = styled(Card)`
 
 const ProfileCard = () => {
   const { profile, logout } = useContext(UserContext);
-  const joinDate = moment(profile.created_at).format("DD/MM/YYYY");
   const [open, setOpen] = useState(false);
+
+  const openModal = () => setOpen(true);
 
   return (
     <ProfileCardContainer>
@@ -78,7 +85,7 @@ const ProfileCard = () => {
             width={127}
             height={127}
           />
-          <button onClick={() => setOpen(true)}></button>
+          <button onClick={openModal}></button>
         </div>
         <span>
           Bem vindo, <span>{profile.name}</span>!
@@ -113,7 +120,7 @@ const ProfileCard = () => {
               width={35}
               height={40}
             />
-            <span>Entrou em {joinDate}</span>
+            <span>Entrou em {profile.created_at as string}</span>
           </li>
         </ul>
       </div>
@@ -121,7 +128,7 @@ const ProfileCard = () => {
         Sair
       </OutlineButton>
       <Modal open={open} setOpen={setOpen}>
-        oi
+        <UpdateUserForm setOpen={setOpen} />
       </Modal>
     </ProfileCardContainer>
   );
