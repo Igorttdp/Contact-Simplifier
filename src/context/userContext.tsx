@@ -5,9 +5,13 @@ import { createContext, Dispatch, SetStateAction, useState } from "react";
 import { setCookie, destroyCookie, parseCookies } from "nookies";
 import { IProviderProps } from "@/interfaces/provider.interface";
 import { IUserProfile } from "@/interfaces/user.interface";
-import { IUpdateUserRequestProps } from "@/interfaces/register.interface";
+import {
+  IRegisterRequestProps,
+  IUpdateUserRequestProps,
+} from "@/interfaces/register.interface";
 
 interface UserProviderData {
+  registerUser(payload: IRegisterRequestProps): Promise<any>;
   login(data: ILoginRequestProps): Promise<string>;
   logout(): void;
   profile: IUserProfile;
@@ -24,18 +28,18 @@ export const UserProvider = ({ children }: IProviderProps) => {
 
   const router = useRouter();
 
+  const registerUser = async (payload: IRegisterRequestProps) => {
+    return await api.post("/users", payload).then((res) => res.data);
+  };
+
   const login = async (payload: ILoginRequestProps) => {
-    try {
-      const { data } = await api.post("/login", payload);
+    const { data } = await api.post("/login", payload);
 
-      setCookie(null, "token", data.token, { maxAge: 60 * 30, path: "/" });
+    setCookie(null, "token", data.token, { maxAge: 60 * 30, path: "/" });
 
-      router.push("/dashboard");
+    router.push("/dashboard");
 
-      return data;
-    } catch (err) {
-      console.error(err);
-    }
+    return data;
   };
 
   const logout = (): void => {
@@ -72,7 +76,14 @@ export const UserProvider = ({ children }: IProviderProps) => {
 
   return (
     <UserContext.Provider
-      value={{ login, logout, profile, setProfile, updateUserData }}
+      value={{
+        registerUser,
+        login,
+        logout,
+        profile,
+        setProfile,
+        updateUserData,
+      }}
     >
       {children}
     </UserContext.Provider>
