@@ -2,7 +2,7 @@ import { IContactResponseProps } from "@/interfaces/contact.interface";
 import Image from "next/image";
 import styled from "styled-components";
 
-const SingleContentCardContainer = styled.div`
+const SingleContentCardContainer = styled.li`
   background-color: #2f3133;
   width: 100%;
   padding: 1.6rem 4rem;
