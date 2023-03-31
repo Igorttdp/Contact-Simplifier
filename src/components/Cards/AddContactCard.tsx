@@ -1,4 +1,4 @@
-import { RegisterContext } from "@/context/registerContext";
+import { ContactsContext } from "@/context/contactsContext";
 import { IContactRequestProps } from "@/interfaces/contact.interface";
 import { useMutation } from "@tanstack/react-query";
 import { useContext } from "react";
@@ -43,7 +43,7 @@ const AddContactCard = () => {
   });
 
   const { registerContact, contacts, setContacts } =
-    useContext(RegisterContext);
+    useContext(ContactsContext);
 
   const { mutateAsync } = useMutation({
     mutationFn: registerContact,
@@ -52,8 +52,8 @@ const AddContactCard = () => {
       toast.success("Cadastro concluído");
       reset();
     },
-    onError: (err) => {
-      toast.error("Ops, algo de errado")
+    onError: () => {
+      toast.error("Ops, algo de errado");
     },
   });
 
@@ -61,7 +61,7 @@ const AddContactCard = () => {
     await mutateAsync({
       ...payload,
       phone: payload.phone.replace(/[^$0-9\.]/g, ""),
-    });
+    }).catch(() => {});
   };
 
   return (
