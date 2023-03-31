@@ -45,14 +45,14 @@ const RegisterFormContainer = ({ setOpen }: IRegisterFormContainerProps) => {
 
   const { mutateAsync, isLoading, isError, isSuccess } = useMutation({
     mutationFn: registerUser,
+    onError: (err) => console.log(err),
   });
 
   const onSubmit = async (data: IRegisterRequestProps) => {
-    try {
-      await mutateAsync(data);
-    } catch (err) {
-      return;
-    }
+    await mutateAsync({
+      ...data,
+      phone: data.phone.replace(/[^$0-9\.]/g, ""),
+    });
   };
 
   const changeModalState = () => {
