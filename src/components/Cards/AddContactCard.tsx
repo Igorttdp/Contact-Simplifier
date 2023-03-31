@@ -1,10 +1,7 @@
 import { RegisterContext } from "@/context/registerContext";
-import {
-  IContactRequestProps,
-  IContactResponseProps,
-} from "@/interfaces/contact.interface";
+import { IContactRequestProps } from "@/interfaces/contact.interface";
 import { useMutation } from "@tanstack/react-query";
-import { Dispatch, SetStateAction, useContext, useEffect } from "react";
+import { useContext } from "react";
 import { useForm } from "react-hook-form";
 import Card from ".";
 import BoxLabelInput from "../BoxLabelInput";
@@ -12,6 +9,7 @@ import OutlineButton from "../OutlineButton";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 import styled from "styled-components";
+import { toast } from "react-toastify";
 
 const AddContactCardContainer = styled(Card)`
   > form {
@@ -51,10 +49,11 @@ const AddContactCard = () => {
     mutationFn: registerContact,
     onSuccess: (newContact) => {
       setContacts([...contacts, newContact]);
+      toast.success("Cadastro concluído");
       reset();
     },
     onError: (err) => {
-      return;
+      toast.error("Ops, algo de errado")
     },
   });
 
