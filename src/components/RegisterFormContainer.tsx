@@ -23,7 +23,10 @@ const schema = yup.object().shape({
     .string()
     .oneOf([yup.ref("password")], "Password must match")
     .required(),
-  phone: yup.string().min(10).max(11).required(),
+  phone: yup
+    .string()
+    .matches(/^(\(\d{2}\)\s\d{4,5}-\d{4})$/, "Telefone inválido")
+    .required(),
 });
 
 const RegisterFormContainer = ({ setOpen }: IRegisterFormContainerProps) => {
