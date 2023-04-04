@@ -6,7 +6,9 @@ import { ContactsContext } from "@/context/contactsContext";
 import { UserContext } from "@/context/userContext";
 import { UtilitiesContext } from "@/context/utilitiesContext";
 import { IUserProfile } from "@/interfaces/user.interface";
+import api from "@/services/api";
 import { NextPage, GetServerSideProps } from "next";
+import Head from "next/head";
 import nookies from "nookies";
 import { useContext, useEffect } from "react";
 
@@ -36,18 +38,25 @@ const Dashboard: NextPage<DashboardProps> = ({ serverSideProfile }) => {
   ]);
 
   return (
-    <DashboardContainer>
-      <ProfileCard />
-      <ContactsCard />
-      <AddContactCard />
-    </DashboardContainer>
+    <>
+      <Head>
+        <title>Contact Simplifier - Dashboard</title>
+        <meta name="description" content="Dashboard" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <link rel="icon" href="/favicon.ico" />
+      </Head>
+      <DashboardContainer>
+        <ProfileCard />
+        <ContactsCard />
+        <AddContactCard />
+      </DashboardContainer>
+    </>
   );
 };
 
 export const getServerSideProps: GetServerSideProps<DashboardProps> = async (
   ctx
 ) => {
-  const hostname = ctx.req.headers.host;
   const cookies = nookies.get(ctx);
 
   if (!cookies["token"]) {
@@ -59,16 +68,17 @@ export const getServerSideProps: GetServerSideProps<DashboardProps> = async (
     };
   }
 
-  const response = await fetch("http://localhost:3000/profile", {
-    headers: {
-      Authorization: `Bearer ${cookies["token"]}`,
-    },
-  });
-  const serverSideProfile = await response.json();
+  const serverSideProfile = await api
+    .get("/profile", {
+      headers: {
+        Authorization: `Bearer ${cookies["token"]}`,
+      },
+    })
+    .then((res) => res.data);
 
   return {
     props: {
-      serverSideProfile,
+      serverSideProfile: serverSideProfile,
     },
   };
 };
