@@ -69,7 +69,7 @@ export const getServerSideProps: GetServerSideProps<DashboardProps> = async (
   }
 
   const serverSideProfile = await api
-    .get("/profile", {
+    .get("https://contact-simplifier-api.onrender.com/profile", {
       headers: {
         Authorization: `Bearer ${cookies["token"]}`,
       },
