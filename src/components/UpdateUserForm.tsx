@@ -109,6 +109,7 @@ const UpdateUserForm = ({ setOpen }: UpdateUserFormProps) => {
 
   const onPhoneChange = (e: ChangeEvent<HTMLInputElement>) => {
     const maskedValue = phoneMask(e.target.value);
+    e.target.value = maskedValue;
     setPhoneValue(maskedValue);
     onChangePhone(e);
   };
