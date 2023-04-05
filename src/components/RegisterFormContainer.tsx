@@ -1,6 +1,6 @@
-import BoxLabelInput from "./BoxLabelInput";
+import BoxLabelInput, { BoxLabelInputContainer } from "./BoxLabelInput";
 import OutlineButton from "./OutlineButton";
-import { useForm } from "react-hook-form";
+import { Controller, useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 import { IRegisterRequestProps } from "@/interfaces/register.interface";
@@ -17,8 +17,8 @@ import { Rings } from "react-loader-spinner";
 import Image from "next/image";
 import { toast } from "react-toastify";
 import { UserContext } from "@/context/userContext";
-import StyledInput from "./Input";
 import { UtilitiesContext } from "@/context/utilitiesContext";
+import StyledInput from "./Input";
 
 interface IRegisterFormContainerProps {
   setOpen: Dispatch<SetStateAction<boolean>>;
@@ -54,28 +54,11 @@ const RegisterFormContainer = ({ setOpen }: IRegisterFormContainerProps) => {
       phone: "",
     },
   });
-
-  const {
-    onChange: onChangePhone,
-    onBlur: onBlurPhone,
-    name: phoneName,
-    ref: phoneRef,
-  } = register("phone");
-
+  
   const { registerUser } = useContext(UserContext);
-  const { phoneMask } = useContext(UtilitiesContext);
-
-  const [phoneValue, setPhoneValue] = useState("");
-
-  const onPhoneChange = (e: ChangeEvent<HTMLInputElement>) => {
-    const maskedValue = phoneMask(e.target.value);
-    setPhoneValue(maskedValue);
-    onChangePhone(e);
-  };
 
   const { mutateAsync, isLoading, isError, isSuccess } = useMutation({
     mutationFn: registerUser,
-    onError: () => toast.error("Ops, algo deu errado"),
   });
 
   const onSubmit = async (data: IRegisterRequestProps) => {
@@ -172,21 +155,15 @@ const RegisterFormContainer = ({ setOpen }: IRegisterFormContainerProps) => {
           error={errors.confirmPassword}
           filled={dirtyFields.confirmPassword ? "filled" : undefined}
         />
-        <div className="tel">
-          <span>
-            Telefone <span>*</span>
-          </span>
-          <StyledInput
-            onChange={onPhoneChange}
-            onBlur={onBlurPhone}
-            name={phoneName}
-            ref={phoneRef}
-            value={phoneValue}
-            error={errors.phone}
-            filled={dirtyFields.phone ? "filled" : undefined}
-            placeholder="(XX) XXXXX-XXXX"
-          />
-        </div>
+        <BoxLabelInput
+          isRequired
+          compiledRegister={{ register: register, name: "phone" }}
+          label={"Telefone"}
+          type={"tel"}
+          placeholder={"(XX) XXXXX-XXXX"}
+          error={errors.phone}
+          filled={dirtyFields.phone ? "filled" : undefined}
+        />
         <OutlineButton width={"250px"} mode={"sucess"}>
           Registrar
         </OutlineButton>
