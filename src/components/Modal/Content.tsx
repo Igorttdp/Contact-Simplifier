@@ -21,12 +21,27 @@ const ModalContent = styled(DialogContent)`
     justify-content: center;
     gap: 3.2rem;
 
-    >h2 {
+    > h2 {
       font-size: 2.6rem;
+    }
+
+    div.tel {
+      display: flex;
+      flex-flow: column nowrap;
+      gap: 1rem;
+      width: 100%;
+
+      span {
+        font-size: 1.6rem;
+
+        > span {
+          color: #ff0000;
+        }
+      }
     }
   }
 
-  >div {
+  > div {
     display: flex;
     flex-flow: column nowrap;
     align-items: center;
