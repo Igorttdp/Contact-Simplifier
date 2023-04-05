@@ -24,21 +24,6 @@ const ModalContent = styled(DialogContent)`
     > h2 {
       font-size: 2.6rem;
     }
-
-    div.tel {
-      display: flex;
-      flex-flow: column nowrap;
-      gap: 1rem;
-      width: 100%;
-
-      span {
-        font-size: 1.6rem;
-
-        > span {
-          color: #ff0000;
-        }
-      }
-    }
   }
 
   > div {
