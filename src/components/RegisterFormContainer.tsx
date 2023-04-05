@@ -4,12 +4,21 @@ import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 import { IRegisterRequestProps } from "@/interfaces/register.interface";
-import { Dispatch, SetStateAction, useContext, useEffect } from "react";
+import {
+  ChangeEvent,
+  Dispatch,
+  SetStateAction,
+  useContext,
+  useEffect,
+  useState,
+} from "react";
 import { useMutation } from "@tanstack/react-query";
 import { Rings } from "react-loader-spinner";
 import Image from "next/image";
 import { toast } from "react-toastify";
 import { UserContext } from "@/context/userContext";
+import StyledInput from "./Input";
+import { UtilitiesContext } from "@/context/utilitiesContext";
 
 interface IRegisterFormContainerProps {
   setOpen: Dispatch<SetStateAction<boolean>>;
@@ -45,7 +54,24 @@ const RegisterFormContainer = ({ setOpen }: IRegisterFormContainerProps) => {
       phone: "",
     },
   });
+
+  const {
+    onChange: onChangePhone,
+    onBlur: onBlurPhone,
+    name: phoneName,
+    ref: phoneRef,
+  } = register("phone");
+
   const { registerUser } = useContext(UserContext);
+  const { phoneMask } = useContext(UtilitiesContext);
+
+  const [phoneValue, setPhoneValue] = useState("");
+
+  const onPhoneChange = (e: ChangeEvent<HTMLInputElement>) => {
+    const maskedValue = phoneMask(e.target.value);
+    setPhoneValue(maskedValue);
+    onChangePhone(e);
+  };
 
   const { mutateAsync, isLoading, isError, isSuccess } = useMutation({
     mutationFn: registerUser,
@@ -146,15 +172,21 @@ const RegisterFormContainer = ({ setOpen }: IRegisterFormContainerProps) => {
           error={errors.confirmPassword}
           filled={dirtyFields.confirmPassword ? "filled" : undefined}
         />
-        <BoxLabelInput
-          isRequired
-          compiledRegister={{ register: register, name: "phone" }}
-          label={"Telefone"}
-          type={"tel"}
-          placeholder={"(XX) XXXXX-XXXX"}
-          error={errors.phone}
-          filled={dirtyFields.phone ? "filled" : undefined}
-        />
+        <div className="tel">
+          <span>
+            Telefone <span>*</span>
+          </span>
+          <StyledInput
+            onChange={onPhoneChange}
+            onBlur={onBlurPhone}
+            name={phoneName}
+            ref={phoneRef}
+            value={phoneValue}
+            error={errors.phone}
+            filled={dirtyFields.phone ? "filled" : undefined}
+            placeholder="(XX) XXXXX-XXXX"
+          />
+        </div>
         <OutlineButton width={"250px"} mode={"sucess"}>
           Registrar
         </OutlineButton>
