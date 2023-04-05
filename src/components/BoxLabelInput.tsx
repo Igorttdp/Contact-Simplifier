@@ -6,7 +6,7 @@ import { IContactRequestProps } from "@/interfaces/contact.interface";
 import { ChangeEvent, useContext, useState } from "react";
 import { UtilitiesContext } from "@/context/utilitiesContext";
 
-const BoxLabelInputContainer = styled.div`
+export const BoxLabelInputContainer = styled.div`
   display: flex;
   flex-flow: column nowrap;
   gap: 1rem;
@@ -58,16 +58,17 @@ const BoxLabelInput = ({
 
   if (type === "tel") {
     const {
-      onChange: onChangePhone,
+      onChange: onPhoneChange,
       onBlur: onPhoneBlur,
       name: phoneName,
       ref: phoneRef,
     } = register("phone");
 
-    const onPhoneChange = (e: ChangeEvent<HTMLInputElement>) => {
+    const phoneChange = (e: ChangeEvent<HTMLInputElement>) => {
       const maskedValue = phoneMask(e.target.value);
+      e.target.value = maskedValue;
       setPhoneValue(maskedValue);
-      onChangePhone(e);
+      onPhoneChange(e);
     };
 
     return (
@@ -76,7 +77,7 @@ const BoxLabelInput = ({
           {label} {requiredAdvertment()}
         </span>
         <StyledInput
-          onChange={onPhoneChange}
+          onChange={phoneChange}
           onBlur={onPhoneBlur}
           name={phoneName}
           ref={phoneRef}
