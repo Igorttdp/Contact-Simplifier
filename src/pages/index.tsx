@@ -6,6 +6,7 @@ import { parseCookies } from "nookies";
 import { useEffect, useState } from "react";
 import Modal from "@/components/Modal";
 import RegisterFormContainer from "@/components/RegisterFormContainer";
+import Logo from "../../public/Logo.svg";
 
 const Home: NextPage = () => {
   const cookies = parseCookies();
@@ -21,10 +22,9 @@ const Home: NextPage = () => {
   return (
     <FullWidthCentralizeContainer>
       <Image
-        src="Logo.svg"
+        className="logo"
+        src={Logo}
         alt={"Contact Simplifier Logo"}
-        width={372}
-        height={120}
         priority
       />
       <LoginForm
