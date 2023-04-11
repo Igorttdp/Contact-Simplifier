@@ -12,6 +12,8 @@ import styled from "styled-components";
 import { toast } from "react-toastify";
 
 const AddContactCardContainer = styled(Card)`
+  grid-area: ac;
+
   > form {
     margin-top: 3rem;
     display: flex;
