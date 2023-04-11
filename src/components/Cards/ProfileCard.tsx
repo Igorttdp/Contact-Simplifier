@@ -8,11 +8,14 @@ import Modal from "../Modal";
 import UpdateUserForm from "../UpdateUserForm";
 
 const ProfileCardContainer = styled(Card)`
+  grid-area: pc;
+
   > div:nth-child(1) {
     display: flex;
     flex-flow: row nowrap;
     align-items: center;
     gap: 2rem;
+    grid-area: pf;
 
     > span {
       font-size: 2rem;
@@ -47,6 +50,8 @@ const ProfileCardContainer = styled(Card)`
   }
 
   > div:nth-child(2) {
+    grid-area: pi;
+
     > ul {
       list-style: none;
       margin: 4rem 0;
@@ -66,6 +71,31 @@ const ProfileCardContainer = styled(Card)`
         }
       }
     }
+  }
+
+  > button {
+    grid-area: pb;
+  }
+
+  @media (max-width: 1440px) {
+    max-width: 80%;
+    display: grid;
+    grid-template-rows: 85% 10%;
+    grid-template-columns: repeat(2, 1fr);
+    grid-template-areas: "pf pi" "pb pb";
+    align-items: center;
+
+    > div:nth-child(1) {
+      flex-flow: column nowrap;
+      justify-content: center;
+    }
+  }
+
+  @media (max-width: 1024px) {
+    max-width: 50rem;
+    grid-template-rows: auto;
+    grid-template-columns: auto;
+    grid-template-areas: "pf" "pi" "pb";
   }
 `;
 
