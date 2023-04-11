@@ -1,24 +1,14 @@
 import BoxLabelInput, { BoxLabelInputContainer } from "./BoxLabelInput";
 import OutlineButton from "./OutlineButton";
-import { Controller, useForm } from "react-hook-form";
+import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 import { IRegisterRequestProps } from "@/interfaces/register.interface";
-import {
-  ChangeEvent,
-  Dispatch,
-  SetStateAction,
-  useContext,
-  useEffect,
-  useState,
-} from "react";
+import { Dispatch, SetStateAction, useContext } from "react";
 import { useMutation } from "@tanstack/react-query";
 import { Rings } from "react-loader-spinner";
 import Image from "next/image";
-import { toast } from "react-toastify";
 import { UserContext } from "@/context/userContext";
-import { UtilitiesContext } from "@/context/utilitiesContext";
-import StyledInput from "./Input";
 
 interface IRegisterFormContainerProps {
   setOpen: Dispatch<SetStateAction<boolean>>;
@@ -54,7 +44,7 @@ const RegisterFormContainer = ({ setOpen }: IRegisterFormContainerProps) => {
       phone: "",
     },
   });
-  
+
   const { registerUser } = useContext(UserContext);
 
   const { mutateAsync, isLoading, isError, isSuccess } = useMutation({
@@ -127,6 +117,7 @@ const RegisterFormContainer = ({ setOpen }: IRegisterFormContainerProps) => {
           placeholder={"Novo nome"}
           error={errors.name}
           filled={dirtyFields.name ? "filled" : undefined}
+          width="100%"
         />
         <BoxLabelInput
           isRequired
@@ -136,6 +127,7 @@ const RegisterFormContainer = ({ setOpen }: IRegisterFormContainerProps) => {
           placeholder={"exemplo@mail.com"}
           error={errors.email}
           filled={dirtyFields.email ? "filled" : undefined}
+          width="100%"
         />
         <BoxLabelInput
           isRequired
@@ -145,6 +137,7 @@ const RegisterFormContainer = ({ setOpen }: IRegisterFormContainerProps) => {
           placeholder={"Nova senha"}
           error={errors.password}
           filled={dirtyFields.password ? "filled" : undefined}
+          width="100%"
         />
         <BoxLabelInput
           isRequired
@@ -154,6 +147,7 @@ const RegisterFormContainer = ({ setOpen }: IRegisterFormContainerProps) => {
           placeholder={"Digite novamente"}
           error={errors.confirmPassword}
           filled={dirtyFields.confirmPassword ? "filled" : undefined}
+          width="100%"
         />
         <BoxLabelInput
           isRequired
@@ -163,6 +157,7 @@ const RegisterFormContainer = ({ setOpen }: IRegisterFormContainerProps) => {
           placeholder={"(XX) XXXXX-XXXX"}
           error={errors.phone}
           filled={dirtyFields.phone ? "filled" : undefined}
+          width="100%"
         />
         <OutlineButton width={"250px"} mode={"sucess"}>
           Registrar
