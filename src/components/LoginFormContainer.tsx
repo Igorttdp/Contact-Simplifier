@@ -11,6 +11,7 @@ import { useRouter } from "next/router";
 import { destroyCookie } from "nookies";
 import { useMutation } from "@tanstack/react-query";
 import { toast } from "react-toastify";
+import { ThreeDots } from "react-loader-spinner";
 
 interface LoginFormProps {
   tokenExists: boolean;
@@ -20,6 +21,8 @@ interface LoginFormProps {
 }
 
 const LoginFormContainer = styled.form`
+  max-width: 50rem;
+  width: 100%;
   padding: 4rem 6rem;
   background-color: rgba(0, 0, 0, 0.1);
   display: flex;
@@ -28,6 +31,13 @@ const LoginFormContainer = styled.form`
   justify-content: center;
   gap: 4.4rem;
   border-radius: 2rem;
+  margin: 0 2rem;
+
+  @media (max-width: 500px) {
+    width: 90%;
+    padding: 4rem 3.5rem;
+  }
+
   h2 {
     font-size: 2.6rem;
     font-weight: bold;
@@ -78,10 +88,33 @@ const LoginForm = ({
     setOpen(true);
   };
 
-  const { mutateAsync } = useMutation({
+  const { mutateAsync, isLoading } = useMutation({
     mutationFn: login,
     onError: () => toast.error("Ops, algo deu errado"),
   });
+
+  const changeFormState = () => {
+    if (isLoading)
+      return (
+        <OutlineButton width={"100%"} mode={"sucess"}>
+          <ThreeDots
+            height="22"
+            width="22"
+            radius="9"
+            color="#4fa94d"
+            ariaLabel="three-dots-loading"
+            wrapperStyle={{ justifyContent: "center" }}
+            visible={true}
+          />
+        </OutlineButton>
+      );
+
+    return (
+      <OutlineButton width={"100%"} mode={"sucess"}>
+        Entrar
+      </OutlineButton>
+    );
+  };
 
   const onSubmit = async (payload: ILoginRequestProps) => {
     toast.dismiss();
@@ -98,6 +131,7 @@ const LoginForm = ({
             placeholder={"Email"}
             error={errors.email}
             filled={dirtyFields.email ? "filled" : undefined}
+            width="100%"
           />
           <StyledInput
             {...register("password")}
@@ -105,6 +139,7 @@ const LoginForm = ({
             type={"password"}
             error={errors.password}
             filled={dirtyFields.password ? "filled" : undefined}
+            width="100%"
           />
 
           <p>
@@ -115,9 +150,7 @@ const LoginForm = ({
             </span>
           </p>
 
-          <OutlineButton width={"34rem"} mode={"sucess"}>
-            Entrar
-          </OutlineButton>
+          {changeFormState()}
         </>
       );
     }
