@@ -11,7 +11,7 @@ import { useRouter } from "next/router";
 import { destroyCookie } from "nookies";
 import { useMutation } from "@tanstack/react-query";
 import { toast } from "react-toastify";
-import { ThreeDots } from "react-loader-spinner";
+import { UtilitiesContext } from "@/context/utilitiesContext";
 
 interface LoginFormProps {
   tokenExists: boolean;
@@ -72,6 +72,7 @@ const LoginForm = ({
   });
 
   const { login } = useContext(UserContext);
+  const { changeButtonState } = useContext(UtilitiesContext);
 
   const router = useRouter();
 
@@ -92,29 +93,6 @@ const LoginForm = ({
     mutationFn: login,
     onError: () => toast.error("Ops, algo deu errado"),
   });
-
-  const changeFormState = () => {
-    if (isLoading)
-      return (
-        <OutlineButton width={"100%"} mode={"sucess"}>
-          <ThreeDots
-            height="22"
-            width="22"
-            radius="9"
-            color="#4fa94d"
-            ariaLabel="three-dots-loading"
-            wrapperStyle={{ justifyContent: "center" }}
-            visible={true}
-          />
-        </OutlineButton>
-      );
-
-    return (
-      <OutlineButton width={"100%"} mode={"sucess"}>
-        Entrar
-      </OutlineButton>
-    );
-  };
 
   const onSubmit = async (payload: ILoginRequestProps) => {
     toast.dismiss();
@@ -150,7 +128,7 @@ const LoginForm = ({
             </span>
           </p>
 
-          {changeFormState()}
+          {changeButtonState(isLoading, "Entrar")}
         </>
       );
     }

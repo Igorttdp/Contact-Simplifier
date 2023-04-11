@@ -10,6 +10,7 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 import styled from "styled-components";
 import { toast } from "react-toastify";
+import { UtilitiesContext } from "@/context/utilitiesContext";
 
 const AddContactCardContainer = styled(Card)`
   grid-area: ac;
@@ -46,8 +47,9 @@ const AddContactCard = () => {
 
   const { registerContact, contacts, setContacts } =
     useContext(ContactsContext);
+  const { changeButtonState } = useContext(UtilitiesContext);
 
-  const { mutateAsync } = useMutation({
+  const { mutateAsync, isLoading } = useMutation({
     mutationFn: registerContact,
     onSuccess: (newContact) => {
       setContacts([...contacts, newContact]);
@@ -109,9 +111,7 @@ const AddContactCard = () => {
           filled={dirtyFields.secundary_email ? "fiiled" : undefined}
           width={"unset"}
         />
-        <OutlineButton width="50%" mode="sucess">
-          Salvar
-        </OutlineButton>
+        {changeButtonState(isLoading, "Salvar")}
       </form>
     </AddContactCardContainer>
   );
