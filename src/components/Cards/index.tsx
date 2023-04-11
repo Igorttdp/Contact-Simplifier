@@ -6,7 +6,8 @@ interface ICardProps {
 
 const Card = styled.div<ICardProps>`
   background-color: ${({ contact }) => (!contact ? " #333A41;" : "#00455B")};
-  width: 50rem;
+  max-width: 50rem;
+  width: 100%;
   min-height: 45rem;
   padding: 4rem;
   border-top: 11px solid #00455b;
@@ -15,6 +16,14 @@ const Card = styled.div<ICardProps>`
   > h2 {
     font-size: 2.6rem;
     text-align: center;
+  }
+
+  @media (max-width: 1024px) {
+    min-width: 28rem;
+  }
+
+  @media (max-width: 375px) {
+    padding: 2rem 3rem;
   }
 `;
 
