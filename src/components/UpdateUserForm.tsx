@@ -155,6 +155,7 @@ const UpdateUserForm = ({ setOpen }: UpdateUserFormProps) => {
             placeholder={"Novo Nome"}
             error={errors.name || atLeastOneError ? "true" : undefined}
             filled={dirtyFields.name ? "filled" : undefined}
+            width="100%"
           />
         </CustomAccordion>
         <CustomAccordion triggerText={"Email"}>
@@ -163,6 +164,7 @@ const UpdateUserForm = ({ setOpen }: UpdateUserFormProps) => {
             placeholder={"Novo Email"}
             error={errors.email || atLeastOneError ? "true" : undefined}
             filled={dirtyFields.email ? "filled" : undefined}
+            width="100%"
           />
         </CustomAccordion>
         <CustomAccordion passwordField={"true"} triggerText={"Senha"}>
@@ -172,6 +174,7 @@ const UpdateUserForm = ({ setOpen }: UpdateUserFormProps) => {
             placeholder={"Nova Senha"}
             error={errors.password || atLeastOneError ? "true" : undefined}
             filled={dirtyFields.password ? "filled" : undefined}
+            width="100%"
           />
           <StyledInput
             {...register("confirmPassword")}
@@ -182,6 +185,7 @@ const UpdateUserForm = ({ setOpen }: UpdateUserFormProps) => {
               errors.confirmPassword || atLeastOneError ? "true" : undefined
             }
             filled={dirtyFields.confirmPassword ? "filled" : undefined}
+            width="100%"
           />
         </CustomAccordion>
         <CustomAccordion triggerText={"Telefone"}>
@@ -196,6 +200,7 @@ const UpdateUserForm = ({ setOpen }: UpdateUserFormProps) => {
             value={phoneValue}
             filled={dirtyFields.phone ? "filled" : undefined}
             maxLength={15}
+            width="100%"
           />
         </CustomAccordion>
         <OutlineButton width={"250px"} mode={"sucess"}>
