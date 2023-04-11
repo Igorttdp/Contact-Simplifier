@@ -9,8 +9,10 @@ const ContactsCardContainer = styled(Card)`
   background-color: rgba(0, 0, 0, 0.1);
   border-top-color: #008c62;
   height: 78vh;
+  padding-right: 2rem;
   overflow-y: hidden;
   position: relative;
+  grid-area: cc;
 
   div {
     height: 80%;
@@ -46,6 +48,10 @@ const ContactsCardContainer = styled(Card)`
     overflow-y: scroll;
     padding-right: 1rem;
 
+    @media (max-width: 320px) {
+      padding: 0;
+    }
+
     &::-webkit-scrollbar {
       width: 8px;
     }
@@ -69,7 +75,7 @@ const ContactsCard = () => {
       return (
         <div>
           <span>Lista Vazia!</span>
-          <span>Adcione um contato no formulário ao lado</span>
+          <span>Adicione um contato no formulário ao lado</span>
           <span>{"-->"}</span>
         </div>
       );
