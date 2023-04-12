@@ -68,8 +68,13 @@ export const getServerSideProps: GetServerSideProps<DashboardProps> = async (
     };
   }
 
+  const url =
+    process.env.NODE_ENV === "production"
+      ? "https://contact-simplifier-api.onrender.com/profile"
+      : "http://localhost:3003/profile";
+
   const serverSideProfile = await api
-    .get("https://contact-simplifier-api.onrender.com/profile", {
+    .get(url, {
       headers: {
         Authorization: `Bearer ${cookies["token"]}`,
       },
