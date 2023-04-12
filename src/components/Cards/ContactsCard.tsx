@@ -5,11 +5,15 @@ import { IContactResponseProps } from "../../interfaces/contact.interface";
 import SingleContactCard from "./SingleContactCard";
 import { ContactsContext } from "@/context/contactsContext";
 
-const ContactsCardContainer = styled(Card)`
+interface ContactsCardCointainerProps {
+  contacts: Array<IContactResponseProps>;
+}
+
+const ContactsCardContainer = styled(Card)<ContactsCardCointainerProps>`
   background-color: rgba(0, 0, 0, 0.1);
   border-top-color: #008c62;
   height: 78vh;
-  padding-right: 2rem;
+  padding-right: ${({ contacts }) => (contacts.length === 0 ? "4rem" : "2rem")};
   overflow-y: hidden;
   position: relative;
   grid-area: cc;
@@ -91,7 +95,7 @@ const ContactsCard = () => {
   };
 
   return (
-    <ContactsCardContainer>
+    <ContactsCardContainer contacts={contacts}>
       <h2>Meus Contatos</h2>
       {handleContactsRender()}
     </ContactsCardContainer>
