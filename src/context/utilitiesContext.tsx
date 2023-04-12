@@ -26,8 +26,6 @@ const UtilitiesProvider = ({ children }: IProviderProps) => {
   const handleDate = (date: Date | string) => moment(date).format("DD/MM/YYYY");
 
   const changeButtonState = (isLoading: boolean, innerText: string) => {
-    console.log(isLoading);
-
     if (isLoading)
       return (
         <OutlineButton width={"100%"} mode={"sucess"}>
