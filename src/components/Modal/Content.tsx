@@ -29,7 +29,7 @@ const ModalContent = styled(DialogContent)`
 
   form {
     width: 100%;
-    height: 66.7rem;
+    height: 67rem;
     display: flex;
     flex-flow: column nowrap;
     align-items: center;
